@@ -6,6 +6,9 @@ exception OperationNotSupported
 open Grammar
 open Helper
 
+(* Árvore binária *)
+datatype 'a bntree = LEAF | NODE of 'a bntree * 'a * 'a bntree
+
 datatype UnOp = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat | Variance
 datatype BinOp = Add | Sub | Div | Mul | And | Or | Pow | RT | Cov | Corr | Concat | LinReg | GetFloat | GetInt | GetString
 datatype OpRel = GTR | LTR | EQR | NEQR | GEQR | LEQR
@@ -17,13 +20,27 @@ datatype Expr = Const of tipo
               | Var of string
 
 
+(* Trocando Tree list por Tree bntree *)
 datatype Tree = Assign of string * Expr
               | Print of Expr
-              | If of Expr * (Tree list) * (Tree list)
+              | If of Expr * Tree bntree
               | While of Expr * (Tree list)
               | Null
 
 type RoseTree = Tree list
+
+(* Funções auxiliares *)
+datatype 'a option = SOME of 'a | NONE
+
+fun getlft LEAF = raise Empty
+  | getlft (NODE (LEAF,_, LEAF)) = raise Empty
+  | getlft (NODE (lft, _, rht)) = lft 
+
+fun getrht LEAF = raise Empty
+  | getrht (NODE (LEAF, _, LEAF)) = raise Empty
+  | getrht (NODE (lft, _, rht)) = rht
+
+
 
 fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
   | getBinaryFun("-", e1, e2) = FuncTwo(Sub, e1, e2)
@@ -162,7 +179,7 @@ fun eval(Const t,vars) = t
               | (_, _) => raise TypeChecker.TypeMismatch
         end
 
-
+(* Percurso da árvore binária implementada no match pattern do if *)
 fun interpret((Print expr),vars,tps) =
         let
             val evaluedExpr = eval(expr,vars)
@@ -182,14 +199,16 @@ fun interpret((Print expr),vars,tps) =
             else
                 raise TypeChecker.TypeError
         end
-  | interpret(If(e,c1,c2),vars,tps) =
+  | interpret(If(e,c1),vars,tps) =
         let
-            val evaluedExpr = TypeChecker.extractBool(eval(e,vars))
+            val evaluedExpr = TypeChecker.extractBool(eval(e,vars))            
+            val left = getlft(c1)
+            val right = getrht(c1)
         in
             if evaluedExpr then
-                programa(c1, vars, tps)
+                traversal(left, vars, tps)
             else
-                programa(c2, vars, tps);
+                traversal(right, vars, tps);
             vars
         end
   | interpret(While(e,c1),vars,tps) =
@@ -207,5 +226,14 @@ fun interpret((Print expr),vars,tps) =
 and programa(x::ls, vars, tps) = let val varsNew = interpret(x, vars, tps) in programa(ls, varsNew, tps) end
   | programa([], vars, tps) = vars
 
-
+(* Percurso pre-order *)
+and traversal(LEAF, vars, tps) = vars
+  | traversal(NODE( c1, a, c2), vars, tps) =
+       let
+         val varsNew1 = interpret(a, vars, tps)
+         val varsNew2 = traversal(c1, varsNew1, tps)
+       in
+         traversal(c2, varsNew2, tps)
+       end 
+  
 end
