@@ -85,6 +85,7 @@ commands
     : prints SEMI  => (prints)
     | assign SEMI  => (assign)
     | conditional  => (conditional)
+    | case  => (case)
     | loop => (loop)
     ;
 
