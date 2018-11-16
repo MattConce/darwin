@@ -87,6 +87,7 @@
 "{}" => ( T.EMPTY );
 "," => ( T.COMMA );
 ":=" => ( T.DOTDOT );
+":" => ( T.TDOT );
 " " | \n | \t  => ( continue() );
 "terminate"   => ( T.KW_terminate );
 .		=> (print (concat ["Unexpected character: '", yytext,

@@ -25,7 +25,7 @@
     | TIMES ("*") | DIV("/") | MINUS ("-") | COMMA(",") | SBOOL of (Bool.bool list)
     | LP ("(") | RP (")") | BOOL of bool | AND ("&&") | OR ("||")
     | SPACE (" ") | GT(">") | LT("<") | LEQ("<=") | GEQ(">=") | NEQ("!=")
-    | KW_variables ("variables") | SEMI | TIPO of string | DOTDOT(":=")
+    | KW_variables ("variables") | SEMI | TIPO of string | DOTDOT(":=") | TDOT(":")
     | KW_commands ("commands") | STR of string | KW_Print ("print")
     | KW_endvars ("end variables") | KW_terminate ("terminate")
     | KW_SUM ("sum") | KW_PROD ("prod") | EMPTY ("{}") | KW_GETS("getString")
@@ -235,10 +235,10 @@ conditional
     ;
 
 switch
-    : KW_CASE exp_bool KW_THEN (commands)* KW_ELSE (commands)* KW_END
+    : KW_CASE expr KW_THEN expr TDOT (commands)* KW_END
         => (
             let
-                val casei = (ParseTree.Case(exp_bool,SR1,SR2))
+                val casei = (ParseTree.Case(expr1,expr2,SR))
             in
                 tree := (casei :: (!tree));
                 casei

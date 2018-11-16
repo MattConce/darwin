@@ -193,14 +193,13 @@ fun interpret((Print expr),vars,tps) =
                 programa(c2, vars, tps);
             vars
         end
-  | interpret(Case(e,c1,c2),vars,tps) =
+  | interpret(Case(e1,e2,c),vars,tps) =
         let
-            val evaluedExpr = TypeChecker.extractBool(eval(e,vars))
+            val evaluedExpr1 = eval(e1,vars)
+            val evaluedExpr2 = eval(e2, vars)
         in
-            if evaluedExpr then
-                programa(c1, vars, tps)
-            else
-                programa(c2, vars, tps);
+            if evaluedExpr1 == evaluedExpr2 then
+                programa(c, vars, tps)
             vars
         end
   | interpret(While(e,c1),vars,tps) =
