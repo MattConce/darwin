@@ -195,14 +195,12 @@ fun interpret((Print expr),vars,tps) =
         end
   | interpret(Case(e1,e2,c),vars,tps) =
         let
-            val evaluedExpr1 = eval(e1,vars)
-            val evaluedExpr2 = eval(e2, vars)
-            val check = (TypeChecker.oper("==", evaluedExpr1, evaluedExpr2))
+            val check = TypeChecker.extractBool(eval(getExprBoolTree("==", e1, e2), vars))
         in
             if check then
               programa(c, vars, tps)
             else
-              programa(c, vars, tps)
+              raise OperationNotSupported
             vars
         end
   | interpret(While(e,c1),vars,tps) =
