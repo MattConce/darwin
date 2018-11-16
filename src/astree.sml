@@ -197,11 +197,12 @@ fun interpret((Print expr),vars,tps) =
         let
             val evaluedExpr1 = eval(e1,vars)
             val evaluedExpr2 = eval(e2, vars)
+            val check = (TypeChecker.oper("==", evaluedExpr1, evaluedExpr2))
         in
-            if evaluedExpr1 == evaluedExpr2 then
+            if check then
               programa(c, vars, tps)
             else
-              ()
+              programa(c, vars, tps)
             vars
         end
   | interpret(While(e,c1),vars,tps) =
