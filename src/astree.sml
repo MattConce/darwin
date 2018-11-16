@@ -199,7 +199,9 @@ fun interpret((Print expr),vars,tps) =
             val evaluedExpr2 = eval(e2, vars)
         in
             if evaluedExpr1 == evaluedExpr2 then
-                programa(c, vars, tps)
+              programa(c, vars, tps)
+            else
+              ()
             vars
         end
   | interpret(While(e,c1),vars,tps) =
