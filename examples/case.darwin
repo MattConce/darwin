@@ -8,7 +8,8 @@ commands
         10 : print("O resultado é bom");
     end
     x := 4;
-    case(x) then
+    y := 5;
+    case(x+y) then
         5 : print("O resultado é bom bom");
     end
 

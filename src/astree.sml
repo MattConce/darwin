@@ -20,7 +20,7 @@ datatype Expr = Const of tipo
 datatype Tree = Assign of string * Expr
               | Print of Expr
               | If of Expr * (Tree list) * (Tree list)
-              | Case of Expr * (Tree list) * (Tree list)
+              | Case of Expr * Expr * (Tree list)
               | While of Expr * (Tree list)
               | Null
 
@@ -200,7 +200,7 @@ fun interpret((Print expr),vars,tps) =
             if check then
               programa(c, vars, tps)
             else
-              raise OperationNotSupported
+              raise OperationNotSupported;
             vars
         end
   | interpret(While(e,c1),vars,tps) =
