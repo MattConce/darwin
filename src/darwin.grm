@@ -85,7 +85,7 @@ commands
     : prints SEMI  => (prints)
     | assign SEMI  => (assign)
     | conditional  => (conditional)
-    | case  => (case)
+    | switch  => (switch)
     | loop => (loop)
     ;
 
@@ -234,7 +234,7 @@ conditional
         )
     ;
 
-case
+switch
     : KW_CASE exp_bool KW_THEN (commands)* KW_ELSE (commands)* KW_END
         => (
             let
