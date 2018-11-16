@@ -17,10 +17,12 @@ datatype Expr = Const of tipo
               | Var of string
 
 
+datatype Case_list = Expr * (Tree list)
+
 datatype Tree = Assign of string * Expr
               | Print of Expr
               | If of Expr * (Tree list) * (Tree list)
-              | Case of Expr * (Tree list) * (Tree list)
+              | Case of Expr * (Case_list list)
               | While of Expr * (Tree list)
               | Null
 
@@ -193,7 +195,7 @@ fun interpret((Print expr),vars,tps) =
                 programa(c2, vars, tps);
             vars
         end
-  | interpret(Case(e1,e2,c),vars,tps) =
+  | interpret(Case(e,c1,c2),vars,tps) =
         let
             val check = TypeChecker.extractBool(eval(getExprBoolTree("==", e1, e2), vars))
         in

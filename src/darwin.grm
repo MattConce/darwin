@@ -29,7 +29,7 @@
     | KW_commands ("commands") | STR of string | KW_Print ("print")
     | KW_endvars ("end variables") | KW_terminate ("terminate")
     | KW_SUM ("sum") | KW_PROD ("prod") | EMPTY ("{}") | KW_GETS("getString")
-    | KW_IF("if") | KW_THEN("then") | KW_ELSE("else") | KW_WHILE("while") | KW_CASE("case")
+    | KW_IF("if") | KW_THEN("then") | KW_ELSE("else") | KW_WHILE("while") | KW_CASE("case") | OF("of")
     | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString") | KW_MEAN("mean")
     | KW_CORR("correlation") | KW_MEDIAN("median") | KW_STDEV("stdDeviation")
     | KW_VAR("variance") | KW_RT("rt") | KW_POW("pow") | KW_GETF("getFloat") | KW_COV("covariance")
@@ -204,6 +204,9 @@ rel_op
     | GT => (">")
     ;
 
+
+
+
 atom_bool
     : ID => (ParseTree.Var ID)
     | BOOL => ( (ParseTree.Const (Grammar.Primitivo (Grammar.Boolean_ BOOL))))
@@ -234,11 +237,29 @@ conditional
         )
     ;
 
+literal
+    : NUM => (ParseTree.Const (Grammar.Primitivo(Grammar.Int_ NUM)))
+    | REAL => (ParseTree.Const (Grammar.Primitivo(Grammar.Float_ REAL)))
+    | STR => (ParseTree.Const (Grammar.Primitivo(Grammar.String_ STR)))
+    ;
+
+case_expr
+    : literal
+    | exp_arit
+    | funcs_int => (funcs_int)
+    | funcs_float => (funcs_float)
+    ;
+
+case_list
+    : literal TDOT (commands)* tree:=(ParseTree.Assign(ID,expr))::(!tree); (ParseTree.Assign(ID,expr)))
+    ;
+    
+
 switch
-    : KW_CASE expr KW_THEN expr TDOT (commands)* KW_END
+    : KW_CASE case_expr OF (case_list)* KW_END
         => (
             let
-                val casei = (ParseTree.Case(expr1,expr2,SR))
+                val casei = (ParseTree.Case(case_expr, SR))
             in
                 tree := (casei :: (!tree));
                 casei
