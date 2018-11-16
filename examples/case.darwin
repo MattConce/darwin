@@ -1,13 +1,13 @@
-title "Testes do comando case";
+title "Testes do comando if";
 variables
     int x;
     int y;
 end variables
 commands
-    case(10) then
-        10 : print("O resultado é bom")
+    case(true) then
+        true : print("O resultado é bom")
     end
-    x := 4
+    x := 5
     case(x) then
         5 : print("O resultado é bom bom")
     end
