@@ -235,23 +235,17 @@ conditional
         )
     ;
 
-literal
-    : NUM => (ParseTree.Const (Grammar.Primitivo(Grammar.Int_ NUM)))
-    | REAL => (ParseTree.Const (Grammar.Primitivo(Grammar.Float_ REAL)))
-    | STR => (ParseTree.Const (Grammar.Primitivo(Grammar.String_ STR)))
-    ;
-
 
 case_element
-    : literal TDOT (commands)* 
-      => (
-	  let 
-	     val casee = (ParseTree.CaseVal(literal, (commands))
-	  in
-             ()
-	)
+    : expr TDOT (commands)* SEMI
+        => (
+            let
+                val ifi2 = (ParseTree.CaseVal(expr,SR))
+            in
+                ()
+            end
+        )
     ;
-    
 
 switch
     : KW_CASE expr OF (case_element)* KW_END

@@ -405,16 +405,18 @@ fun conditional_PROD_1_ACT (SR1, SR2, exp_bool, KW_ELSE, KW_THEN, KW_IF, KW_END,
                 ifi
             end
         )
-fun literal_PROD_1_ACT (NUM, NUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  (ParseTree.Const (Grammar.Primitivo(Grammar.Int_ NUM)))
-fun literal_PROD_2_ACT (REAL, REAL_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  (ParseTree.Const (Grammar.Primitivo(Grammar.Float_ REAL)))
-fun literal_PROD_3_ACT (STR, STR_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  (ParseTree.Const (Grammar.Primitivo(Grammar.String_ STR)))
+fun case_element_PROD_1_ACT (SR, SEMI, TDOT, expr, SR_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), TDOT_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  (
+            let
+                val ifi2 = (ParseTree.CaseVal(expr,SR))
+            in
+                ()
+            end
+        )
 fun switch_PROD_1_ACT (OF, SR, expr, KW_CASE, KW_END, OF_SPAN : (Lex.pos * Lex.pos), SR_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   (
             let
-                val casei = (ParseTree.Case(expr, (case_element)*))
+                val casei = (ParseTree.Case(expr))
             in
                 tree := (casei :: (!tree));
                 casei
@@ -1932,36 +1934,6 @@ and op_str_NT (strm) = let
         (UserCode.op_str_PROD_1_ACT (atom_string1_RES, atom_string2_RES, CONCAT_RES, atom_string1_SPAN : (Lex.pos * Lex.pos), atom_string2_SPAN : (Lex.pos * Lex.pos), CONCAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
           FULL_SPAN, strm')
       end
-fun literal_NT (strm) = let
-      fun literal_PROD_1 (strm) = let
-            val (NUM_RES, NUM_SPAN, strm') = matchNUM(strm)
-            val FULL_SPAN = (#1(NUM_SPAN), #2(NUM_SPAN))
-            in
-              (UserCode.literal_PROD_1_ACT (NUM_RES, NUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
-                FULL_SPAN, strm')
-            end
-      fun literal_PROD_2 (strm) = let
-            val (REAL_RES, REAL_SPAN, strm') = matchREAL(strm)
-            val FULL_SPAN = (#1(REAL_SPAN), #2(REAL_SPAN))
-            in
-              (UserCode.literal_PROD_2_ACT (REAL_RES, REAL_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
-                FULL_SPAN, strm')
-            end
-      fun literal_PROD_3 (strm) = let
-            val (STR_RES, STR_SPAN, strm') = matchSTR(strm)
-            val FULL_SPAN = (#1(STR_SPAN), #2(STR_SPAN))
-            in
-              (UserCode.literal_PROD_3_ACT (STR_RES, STR_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
-                FULL_SPAN, strm')
-            end
-      in
-        (case (lex(strm))
-         of (Tok.STR(_), _, strm') => literal_PROD_3(strm)
-          | (Tok.NUM(_), _, strm') => literal_PROD_1(strm)
-          | (Tok.REAL(_), _, strm') => literal_PROD_2(strm)
-          | _ => fail()
-        (* end case *))
-      end
 fun assign_NT (strm) = let
       val (ID_RES, ID_SPAN, strm') = matchID(strm)
       val (DOTDOT_RES, DOTDOT_SPAN, strm') = matchDOTDOT(strm')
@@ -2065,9 +2037,37 @@ and switch_NT (strm) = let
               ((case_element_RES), FULL_SPAN, strm')
             end
       fun switch_PROD_1_SUBRULE_1_PRED (strm) = (case (lex(strm))
-             of (Tok.NUM(_), _, strm') => true
+             of (Tok.SSTRING(_), _, strm') => true
+              | (Tok.ID(_), _, strm') => true
+              | (Tok.NUM(_), _, strm') => true
               | (Tok.REAL(_), _, strm') => true
+              | (Tok.SINT(_), _, strm') => true
+              | (Tok.SFLOAT(_), _, strm') => true
+              | (Tok.MINUS, _, strm') => true
+              | (Tok.SBOOL(_), _, strm') => true
+              | (Tok.LP, _, strm') => true
+              | (Tok.BOOL(_), _, strm') => true
               | (Tok.STR(_), _, strm') => true
+              | (Tok.KW_SUM, _, strm') => true
+              | (Tok.KW_PROD, _, strm') => true
+              | (Tok.KW_GETS, _, strm') => true
+              | (Tok.KW_TOSTRING, _, strm') => true
+              | (Tok.KW_MEAN, _, strm') => true
+              | (Tok.KW_CORR, _, strm') => true
+              | (Tok.KW_MEDIAN, _, strm') => true
+              | (Tok.KW_STDEV, _, strm') => true
+              | (Tok.KW_VAR, _, strm') => true
+              | (Tok.KW_RT, _, strm') => true
+              | (Tok.KW_POW, _, strm') => true
+              | (Tok.KW_GETF, _, strm') => true
+              | (Tok.KW_COV, _, strm') => true
+              | (Tok.KW_LINREG, _, strm') => true
+              | (Tok.TUPLE(_), _, strm') => true
+              | (Tok.STUPLE(_), _, strm') => true
+              | (Tok.KW_GETI, _, strm') => true
+              | (Tok.KW_TOFLOAT, _, strm') => true
+              | (Tok.KW_TOINT, _, strm') => true
+              | (Tok.CONCAT, _, strm') => true
               | _ => false
             (* end case *))
       val (SR_RES, SR_SPAN, strm') = EBNF.closure(switch_PROD_1_SUBRULE_1_PRED, switch_PROD_1_SUBRULE_1_NT, strm')
@@ -2078,7 +2078,7 @@ and switch_NT (strm) = let
           FULL_SPAN, strm')
       end
 and case_element_NT (strm) = let
-      val (literal_RES, literal_SPAN, strm') = literal_NT(strm)
+      val (expr_RES, expr_SPAN, strm') = expr_NT(strm)
       val (TDOT_RES, TDOT_SPAN, strm') = matchTDOT(strm')
       fun case_element_PROD_1_SUBRULE_1_NT (strm) = let
             val (commands_RES, commands_SPAN, strm') = commands_NT(strm)
@@ -2095,9 +2095,11 @@ and case_element_NT (strm) = let
               | _ => false
             (* end case *))
       val (SR_RES, SR_SPAN, strm') = EBNF.closure(case_element_PROD_1_SUBRULE_1_PRED, case_element_PROD_1_SUBRULE_1_NT, strm')
-      val FULL_SPAN = (#1(literal_SPAN), #2(SR_SPAN))
+      val (SEMI_RES, SEMI_SPAN, strm') = matchSEMI(strm')
+      val FULL_SPAN = (#1(expr_SPAN), #2(SEMI_SPAN))
       in
-        ((literal_RES, SR_RES), FULL_SPAN, strm')
+        (UserCode.case_element_PROD_1_ACT (SR_RES, SEMI_RES, TDOT_RES, expr_RES, SR_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), TDOT_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+          FULL_SPAN, strm')
       end
 and conditional_NT (strm) = let
       val (KW_IF_RES, KW_IF_SPAN, strm') = matchKW_IF(strm)
