@@ -47,6 +47,8 @@ fun pop() =
 	    hd::tl => (stack := tl; hd)
     end
 
+
+
 fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
   | getBinaryFun("-", e1, e2) = FuncTwo(Sub, e1, e2)
   | getBinaryFun("/", e1, e2) = FuncTwo(Div, e1, e2)
@@ -185,7 +187,20 @@ fun eval(Const t,vars) = t
         end
 
 
-
+fun find (e, [], vars) = raise OperationNotSupported
+    | find (e, (a, b:Tree list) :: xs, vars) = 
+        let
+            val check2 = TypeChecker.extractBool(eval(getExprBoolTree("==", e, a), vars))
+            val check1 = TypeChecker.extractBool(eval(getExprBoolTree("==", NULO2, a), vars))
+        in
+            if (check1) then 
+                nil
+            else 
+		if (check2) then
+		    b
+		else 
+		    find (e, xs, vars) 
+        end 
 
 fun interpret((Print expr),vars,tps) =
         let
@@ -218,9 +233,9 @@ fun interpret((Print expr),vars,tps) =
         end
   | interpret(Case(e),vars,tps) =
         let
-            (*val target = find(e);*)
+            val target = find(e, !stack, vars);
         in
-            (*programa(target, vars, tps);*)
+            programa(target, vars, tps);
             vars
         end
   | interpret(CaseVal(e, c1), vars, tps) =
