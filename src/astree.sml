@@ -17,12 +17,12 @@ datatype Expr = Const of tipo
               | Var of string
 
 
-datatype Case_list = Expr * (Tree list)
+datatype Case_element = Expr * (Tree list)
 
 datatype Tree = Assign of string * Expr
               | Print of Expr
               | If of Expr * (Tree list) * (Tree list)
-              | Case of Expr * (Case_list list)
+              | Case of Expr * (Case_element list)
               | While of Expr * (Tree list)
               | Null
 
@@ -165,6 +165,8 @@ fun eval(Const t,vars) = t
               | (_, _) => raise TypeChecker.TypeMismatch
         end
 
+fun getCommand (e, (x,y))        
+
 
 fun interpret((Print expr),vars,tps) =
         let
@@ -195,11 +197,13 @@ fun interpret((Print expr),vars,tps) =
                 programa(c2, vars, tps);
             vars
         end
-  | interpret(Case(e,c1,c2),vars,tps) =
+  | interpret(Case(e,c1),vars,tps) =
         let
-            val check = TypeChecker.extractBool(eval(getExprBoolTree("==", e1, e2), vars))
+            val op = eval(e,vars)
+            val target = getCommand(e,c1)
         in
-            if check then
+          case (op)
+          if check then
               programa(c, vars, tps)
             else
               raise OperationNotSupported

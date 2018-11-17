@@ -250,16 +250,16 @@ case_expr
     | funcs_float => (funcs_float)
     ;
 
-case_list
-    : literal TDOT (commands)* tree:=(ParseTree.Assign(ID,expr))::(!tree); (ParseTree.Assign(ID,expr)))
+case_element
+    : literal TDOT (commands)* => ParseTree.Case_element(literal, SR)
     ;
     
 
 switch
-    : KW_CASE case_expr OF (case_list)* KW_END
+    : KW_CASE case_expr OF (case_element)* KW_END
         => (
             let
-                val casei = (ParseTree.Case(case_expr, SR))
+                val casei = (ParseTree.Case(case_expr, case_element*))
             in
                 tree := (casei :: (!tree));
                 casei
