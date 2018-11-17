@@ -166,12 +166,11 @@ fun eval(Const t,vars) = t
         end
 
 fun getCommand (e, nil, vars) = raise OperationNotSupported
-    | getCommand (e, (a, b) :: xs, vars) = 
+    | getCommand (e, Element(a, b) :: xs, vars) = 
         let
-            val evaluedExpr = eval(e, vars)
-            val evaluedTarget = eval(a, vars)
+            val evaluedExpr = eval(a, vars)
         in
-            if (evaluedExpr == evaluedTarget) then
+            if (e = evaluedExpr) then
                 b
             else 
                 getCommand (e, xs, vars)
@@ -210,7 +209,8 @@ fun interpret((Print expr),vars,tps) =
         end
   | interpret(Case(e,c1),vars,tps) =
         let
-            val target = getCommand(e, c1, vars)
+            val op = eval(e, vars)
+            val target = getCommand(op, c1, vars)
         in
             programa(target, vars, tps)
             vars
