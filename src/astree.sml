@@ -17,7 +17,7 @@ datatype Expr = Const of tipo
               | Var of string
 
 
-datatype Case_element = Expr * (Tree list)
+datatype Case_element = Element of Expr * (Tree list)
 
 datatype Tree = Assign of string * Expr
               | Print of Expr
@@ -210,7 +210,6 @@ fun interpret((Print expr),vars,tps) =
         end
   | interpret(Case(e,c1),vars,tps) =
         let
-            val op = eval(e,vars)
             val target = getCommand(e, c1, vars)
         in
             programa(target, vars, tps)
