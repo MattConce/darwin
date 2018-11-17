@@ -21,8 +21,8 @@ datatype Expr = Const of tipo
 datatype Tree = Assign of string * Expr
               | Print of Expr
               | If of Expr * (Tree list) * (Tree list)
-              | Case of Expr
               | CaseVal of Expr * (Tree list)
+              | Case of Expr
               | While of Expr * (Tree list)
               | Null
               | NULO
@@ -35,6 +35,7 @@ fun push(x : (Expr * (Tree list))) =
     let 
       
     in
+        print("Inserted");
         stack := x :: (!stack);
         ()
     end
@@ -229,14 +230,15 @@ fun interpret((Print expr),vars,tps) =
         end
   | interpret(Case(e),vars,tps) =
         let
-            (*val target = find(e, !stack, vars);*)
+            val target = find(e, !stack, vars);
         in
             print "Case\n";
-            (*programa(target , vars, tps);*)
+            programa(target , vars, tps);
             vars
         end
   | interpret(CaseVal(e, c1), vars, tps) =
 	let
+           val time = 10;
 	in
            print "CaseVal\n";
 	   push((e,c1));

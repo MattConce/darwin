@@ -240,10 +240,10 @@ case_element
     : expr TDOT (commands)*
         => (
             let
-                val ifi2 = (ParseTree.CaseVal(expr,SR))
+                val ifi2 = (ParseTree.push((expr,SR)))
             in
                 print "world is funny";
-		ifi2
+		()
             end
         )
     ;

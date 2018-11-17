@@ -408,10 +408,10 @@ fun conditional_PROD_1_ACT (SR1, SR2, exp_bool, KW_ELSE, KW_THEN, KW_IF, KW_END,
 fun case_element_PROD_1_ACT (SR, TDOT, expr, SR_SPAN : (Lex.pos * Lex.pos), TDOT_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   (
             let
-                val ifi2 = (ParseTree.CaseVal(expr,SR))
+                val ifi2 = (ParseTree.push((expr,SR)))
             in
                 print "world is funny";
-		ifi2
+		()
             end
         )
 fun switch_PROD_1_ACT (OF, expr, KW_CASE, case_element, KW_END, OF_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), case_element_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
