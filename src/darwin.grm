@@ -242,7 +242,7 @@ case_element
             let
                 val ifi2 = (ParseTree.CaseVal(expr,SR))
             in
-                ()
+                ifi2
             end
         )
     ;

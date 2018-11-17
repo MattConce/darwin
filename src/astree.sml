@@ -235,12 +235,14 @@ fun interpret((Print expr),vars,tps) =
         let
             val target = find(e, !stack, vars);
         in
+            print "Case\n";
             programa(target, vars, tps);
             vars
         end
   | interpret(CaseVal(e, c1), vars, tps) =
 	let
 	in
+           print "CaseVal\n";
 	   push((e,c1));
 	   vars
 	end

@@ -4,11 +4,7 @@ variables
     int y;
 end variables
 commands
-    case(10) then
-        (10) : print("O resultado é bom");
-    end
-    x := 4;
-    case(x) then
-        (5) : print("O resultado é bom bom");
+    case (10+1) of
+        (10+1) : print("O resultado é bom");
     end
 

@@ -410,7 +410,7 @@ fun case_element_PROD_1_ACT (SR, SEMI, TDOT, expr, SR_SPAN : (Lex.pos * Lex.pos)
             let
                 val ifi2 = (ParseTree.CaseVal(expr,SR))
             in
-                ()
+                ifi2
             end
         )
 fun switch_PROD_1_ACT (OF, SR, expr, KW_CASE, KW_END, OF_SPAN : (Lex.pos * Lex.pos), SR_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
