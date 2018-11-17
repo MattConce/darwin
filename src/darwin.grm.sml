@@ -410,14 +410,16 @@ fun case_element_PROD_1_ACT (SR, TDOT, expr, SR_SPAN : (Lex.pos * Lex.pos), TDOT
             let
                 val ifi2 = (ParseTree.CaseVal(expr,SR))
             in
-                ()
+                print "world is funny";
+		ifi2
             end
         )
-fun switch_PROD_1_ACT (OF, SR, expr, KW_CASE, KW_END, OF_SPAN : (Lex.pos * Lex.pos), SR_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+fun switch_PROD_1_ACT (OF, expr, KW_CASE, case_element, KW_END, OF_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), case_element_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   (
             let
                 val casei = (ParseTree.Case(expr))
             in
+                print "world is sad";
                 tree := (casei :: (!tree));
                 casei
             end
@@ -2030,51 +2032,11 @@ and switch_NT (strm) = let
       val (KW_CASE_RES, KW_CASE_SPAN, strm') = matchKW_CASE(strm)
       val (expr_RES, expr_SPAN, strm') = expr_NT(strm')
       val (OF_RES, OF_SPAN, strm') = matchOF(strm')
-      fun switch_PROD_1_SUBRULE_1_NT (strm) = let
-            val (case_element_RES, case_element_SPAN, strm') = case_element_NT(strm)
-            val FULL_SPAN = (#1(case_element_SPAN), #2(case_element_SPAN))
-            in
-              ((case_element_RES), FULL_SPAN, strm')
-            end
-      fun switch_PROD_1_SUBRULE_1_PRED (strm) = (case (lex(strm))
-             of (Tok.SSTRING(_), _, strm') => true
-              | (Tok.ID(_), _, strm') => true
-              | (Tok.NUM(_), _, strm') => true
-              | (Tok.REAL(_), _, strm') => true
-              | (Tok.SINT(_), _, strm') => true
-              | (Tok.SFLOAT(_), _, strm') => true
-              | (Tok.MINUS, _, strm') => true
-              | (Tok.SBOOL(_), _, strm') => true
-              | (Tok.LP, _, strm') => true
-              | (Tok.BOOL(_), _, strm') => true
-              | (Tok.STR(_), _, strm') => true
-              | (Tok.KW_SUM, _, strm') => true
-              | (Tok.KW_PROD, _, strm') => true
-              | (Tok.KW_GETS, _, strm') => true
-              | (Tok.KW_TOSTRING, _, strm') => true
-              | (Tok.KW_MEAN, _, strm') => true
-              | (Tok.KW_CORR, _, strm') => true
-              | (Tok.KW_MEDIAN, _, strm') => true
-              | (Tok.KW_STDEV, _, strm') => true
-              | (Tok.KW_VAR, _, strm') => true
-              | (Tok.KW_RT, _, strm') => true
-              | (Tok.KW_POW, _, strm') => true
-              | (Tok.KW_GETF, _, strm') => true
-              | (Tok.KW_COV, _, strm') => true
-              | (Tok.KW_LINREG, _, strm') => true
-              | (Tok.TUPLE(_), _, strm') => true
-              | (Tok.STUPLE(_), _, strm') => true
-              | (Tok.KW_GETI, _, strm') => true
-              | (Tok.KW_TOFLOAT, _, strm') => true
-              | (Tok.KW_TOINT, _, strm') => true
-              | (Tok.CONCAT, _, strm') => true
-              | _ => false
-            (* end case *))
-      val (SR_RES, SR_SPAN, strm') = EBNF.closure(switch_PROD_1_SUBRULE_1_PRED, switch_PROD_1_SUBRULE_1_NT, strm')
+      val (case_element_RES, case_element_SPAN, strm') = case_element_NT(strm')
       val (KW_END_RES, KW_END_SPAN, strm') = matchKW_END(strm')
       val FULL_SPAN = (#1(KW_CASE_SPAN), #2(KW_END_SPAN))
       in
-        (UserCode.switch_PROD_1_ACT (OF_RES, SR_RES, expr_RES, KW_CASE_RES, KW_END_RES, OF_SPAN : (Lex.pos * Lex.pos), SR_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+        (UserCode.switch_PROD_1_ACT (OF_RES, expr_RES, KW_CASE_RES, case_element_RES, KW_END_RES, OF_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), case_element_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
           FULL_SPAN, strm')
       end
 and case_element_NT (strm) = let
@@ -2087,15 +2049,11 @@ and case_element_NT (strm) = let
               ((commands_RES), FULL_SPAN, strm')
             end
       fun case_element_PROD_1_SUBRULE_1_PRED (strm) = (case (lex(strm))
-             of (Tok.KW_Print, _, strm') => true
+             of (Tok.ID(_), _, strm') => true
+              | (Tok.KW_Print, _, strm') => true
               | (Tok.KW_IF, _, strm') => true
               | (Tok.KW_WHILE, _, strm') => true
               | (Tok.KW_CASE, _, strm') => true
-              | (Tok.ID(_), _, strm') =>
-                  (case (lex(strm'))
-                   of (Tok.DOTDOT, _, strm') => true
-                    | _ => false
-                  (* end case *))
               | _ => false
             (* end case *))
       val (SR_RES, SR_SPAN, strm') = EBNF.closure(case_element_PROD_1_SUBRULE_1_PRED, case_element_PROD_1_SUBRULE_1_NT, strm')

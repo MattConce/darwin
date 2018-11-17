@@ -6,7 +6,6 @@ end variables
 commands
     case (10) of
         (10) : print("O resultado é bom");
-        (10) : print("O resultado");
     end
     x:= 10;
 
