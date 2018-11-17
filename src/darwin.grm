@@ -240,7 +240,7 @@ case_element
     : expr TDOT (commands)* SEMI
         => (
             let
-                val ifi2 = (ParseTree.CaseVal(exp_bool,SR))
+                val ifi2 = (ParseTree.CaseVal(expr,SR))
             in
                 ()
             end

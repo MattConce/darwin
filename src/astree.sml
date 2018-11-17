@@ -15,6 +15,7 @@ datatype Expr = Const of tipo
               | FuncTwo of BinOp * Expr * Expr
               | Rel of OpRel * Expr * Expr
               | Var of string
+              | NULO2
 
 
 datatype Tree = Assign of string * Expr
@@ -24,27 +25,28 @@ datatype Tree = Assign of string * Expr
               | CaseVal of Expr * (Tree list)
               | While of Expr * (Tree list)
               | Null
+              | NULO
 
 type RoseTree = Tree list
 
-val stack = [(nil, nil)]
+val stack = ref [(NULO2, [NULO])]
 
-fun push(v1) = 
+fun push(x : (Expr * (Tree list))) = 
     let 
       
     in
-        stack := v1 :: (!stack);
+       (* stack := x :: (!stack);*)
         ()
     end
-fun pop() =
-    let
-       val tmp = x :: (!stack);
-    in 
-       stack := tmp;
-       x
+
+fun pop() = 
+    let 
+
+    in
+	    case (!stack) of
+	    hd::tl => (stack := tl; hd)
     end
 
-       
 fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
   | getBinaryFun("-", e1, e2) = FuncTwo(Sub, e1, e2)
   | getBinaryFun("/", e1, e2) = FuncTwo(Div, e1, e2)
@@ -182,17 +184,6 @@ fun eval(Const t,vars) = t
               | (_, _) => raise TypeChecker.TypeMismatch
         end
 
-fun find (e, (nil, nil), vars) = raise OperationNotSupported
-    | find (e, (a, b) :: xs, vars) = 
-        let
-            val evaluedExpr = eval(e, vars)
-            val evaluedTarget = eval(a, vars)
-        in
-            if (evaluedExpr == evaluedTarget) then
-                b
-            else 
-                find (e, xs, vars)
-        end   
 
 
 
@@ -227,17 +218,15 @@ fun interpret((Print expr),vars,tps) =
         end
   | interpret(Case(e),vars,tps) =
         let
-            val target = find(e);
-            val popped = pop_all();
+            (*val target = find(e);*)
         in
-            programa(target, vars, tps);
+            (*programa(target, vars, tps);*)
             vars
         end
   | interpret(CaseVal(e, c1), vars, tps) =
 	let
-	   
 	in
-	   push((e,c1))
+	   push((e,c1));
 	   vars
 	end
   | interpret(While(e,c1),vars,tps) =
