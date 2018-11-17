@@ -191,12 +191,8 @@ fun find (e, [], vars) = raise OperationNotSupported
     | find (e, (a, b:Tree list) :: xs, vars) = 
         let
             val check2 = TypeChecker.extractBool(eval(getExprBoolTree("==", e, a), vars))
-            val check1 = TypeChecker.extractBool(eval(getExprBoolTree("==", NULO2, a), vars))
         in
-            if (check1) then 
-                nil
-            else 
-		if (check2) then
+	    if (check2) then
 		    b
 		else 
 		    find (e, xs, vars) 
@@ -233,10 +229,10 @@ fun interpret((Print expr),vars,tps) =
         end
   | interpret(Case(e),vars,tps) =
         let
-            val target = find(e, !stack, vars);
+            (*val target = find(e, !stack, vars);*)
         in
             print "Case\n";
-            programa(target, vars, tps);
+            (*programa(target , vars, tps);*)
             vars
         end
   | interpret(CaseVal(e, c1), vars, tps) =
@@ -250,6 +246,7 @@ fun interpret((Print expr),vars,tps) =
         let
             val evaluedExpr = TypeChecker.extractBool(eval(e,vars))
         in
+           print "While\n";
             if evaluedExpr then
               let val newVars = programa(c1, vars, tps) in interpret(While(e,c1), newVars, tps) end
             else

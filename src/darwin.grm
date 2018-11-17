@@ -237,12 +237,12 @@ conditional
 
 
 case_element
-    : expr TDOT (commands)* SEMI
+    : expr TDOT (commands)*
         => (
             let
                 val ifi2 = (ParseTree.CaseVal(expr,SR))
             in
-                ifi2
+                ()
             end
         )
     ;

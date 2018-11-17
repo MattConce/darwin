@@ -4,7 +4,13 @@ variables
     int y;
 end variables
 commands
-    case (10+1) of
-        (10+1) : print("O resultado é bom");
+    case (10) of
+        (10) : print("O resultado é bom");
+        (10) : print("O resultado");
+    end
+    x:= 10;
+
+    while (x > 0) do
+        x := (x - 1);
     end
 
