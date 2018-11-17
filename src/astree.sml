@@ -28,6 +28,23 @@ datatype Tree = Assign of string * Expr
 
 type RoseTree = Tree list
 
+val stack = [(nil, nil)]
+
+fun push(v1) = 
+    let 
+      
+    in
+        stack := v1 :: (!stack);
+        ()
+    end
+fun pop() =
+    let
+       val tmp = x :: (!stack);
+    in 
+       stack := tmp;
+       x
+
+       
 fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
   | getBinaryFun("-", e1, e2) = FuncTwo(Sub, e1, e2)
   | getBinaryFun("/", e1, e2) = FuncTwo(Div, e1, e2)
@@ -165,8 +182,8 @@ fun eval(Const t,vars) = t
               | (_, _) => raise TypeChecker.TypeMismatch
         end
 
-fun getCommand (e, nil, vars) = raise OperationNotSupported
-    | getCommand (e, (a, b) :: xs, vars) = 
+fun find (e, (nil, nil), vars) = raise OperationNotSupported
+    | find (e, (a, b) :: xs, vars) = 
         let
             val evaluedExpr = eval(e, vars)
             val evaluedTarget = eval(a, vars)
@@ -174,8 +191,8 @@ fun getCommand (e, nil, vars) = raise OperationNotSupported
             if (evaluedExpr == evaluedTarget) then
                 b
             else 
-                getCommand (e, xs, vars)
-        end        
+                find (e, xs, vars)
+        end   
 
 
 
@@ -208,13 +225,21 @@ fun interpret((Print expr),vars,tps) =
                 programa(c2, vars, tps);
             vars
         end
-  | interpret(Case(e,c1),vars,tps) =
+  | interpret(Case(e),vars,tps) =
         let
-            val target = getCommand(e, c1, vars)
+            val target = find(e);
+            val popped = pop_all();
         in
-            programa(target, vars, tps)
+            programa(target, vars, tps);
             vars
         end
+  | interpret(CaseVal(e, c1), vars, tps) =
+	let
+	   
+	in
+	   push((e,c1))
+	   vars
+	end
   | interpret(While(e,c1),vars,tps) =
         let
             val evaluedExpr = TypeChecker.extractBool(eval(e,vars))

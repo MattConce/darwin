@@ -244,6 +244,12 @@ literal
 
 case_element
     : literal TDOT (commands)* 
+      => (
+	  let 
+	     val casee = (ParseTree.CaseVal(literal, (commands))
+	  in
+             ()
+	)
     ;
     
 
@@ -251,7 +257,7 @@ switch
     : KW_CASE expr OF (case_element)* KW_END
         => (
             let
-                val casei = (ParseTree.Case(expr, (case_element)*))
+                val casei = (ParseTree.Case(expr))
             in
                 tree := (casei :: (!tree));
                 casei
