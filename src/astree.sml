@@ -165,7 +165,18 @@ fun eval(Const t,vars) = t
               | (_, _) => raise TypeChecker.TypeMismatch
         end
 
-fun getCommand (e, (x,y))        
+fun getCommand (e, nil, vars) = raise OperationNotSupported
+    | getCommand (e, (a, b) :: xs, vars) = 
+        let
+            val evaluedExpr = eval(e, vars)
+            val evaluedTarget = eval(a, vars)
+        in
+            if (evaluedExpr == evaluedTarget) then
+                b
+            else 
+                getCommand (e, xs, vars)
+        end        
+
 
 
 fun interpret((Print expr),vars,tps) =
@@ -200,13 +211,9 @@ fun interpret((Print expr),vars,tps) =
   | interpret(Case(e,c1),vars,tps) =
         let
             val op = eval(e,vars)
-            val target = getCommand(e,c1)
+            val target = getCommand(e, c1, vars)
         in
-          case (op)
-          if check then
-              programa(c, vars, tps)
-            else
-              raise OperationNotSupported
+            programa(target, vars, tps)
             vars
         end
   | interpret(While(e,c1),vars,tps) =
