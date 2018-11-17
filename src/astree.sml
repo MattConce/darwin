@@ -35,7 +35,7 @@ fun push(x : (Expr * (Tree list))) =
     let 
       
     in
-       (* stack := x :: (!stack);*)
+        stack := x :: (!stack);
         ()
     end
 
