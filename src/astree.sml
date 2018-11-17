@@ -17,12 +17,11 @@ datatype Expr = Const of tipo
               | Var of string
 
 
-datatype Case_element = Element of Expr * (Tree list)
-
 datatype Tree = Assign of string * Expr
               | Print of Expr
               | If of Expr * (Tree list) * (Tree list)
-              | Case of Expr * (Case_element list)
+              | Case of Expr
+              | CaseVal of Expr * (Tree list)
               | While of Expr * (Tree list)
               | Null
 
@@ -43,6 +42,7 @@ fun pop() =
     in 
        stack := tmp;
        x
+    end
 
        
 fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
