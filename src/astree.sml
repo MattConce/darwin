@@ -208,9 +208,8 @@ fun interpret((Print expr),vars,tps) =
             vars
         end
   | interpret(Case(e,c1),vars,tps) =
-        let
-            val op = eval(e, vars)
-            val target = getCommand(op, c1, vars)
+        let                        
+            val target = getCommand(eval(e, vars), c1, vars)
         in
             programa(target, vars, tps)
             vars
