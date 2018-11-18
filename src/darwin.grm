@@ -243,9 +243,9 @@ literal
 
 
 case_element
-    : literal TDOT (commands)* 
+    : literal TDOT (commands)*
     ;
-    
+
 
 switch
     : KW_CASE expr OF (case_element)* KW_END

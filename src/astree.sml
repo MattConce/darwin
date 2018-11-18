@@ -166,16 +166,16 @@ fun eval(Const t,vars) = t
         end
 
 fun getCommand (e, nil, vars) = raise OperationNotSupported
-    | getCommand (e, (a, b) :: xs, vars) = 
+    | getCommand (e, (a, b) :: xs, vars) =
         let
-            val evaluedExpr = eval(e, vars)
-            val evaluedTarget = eval(a, vars)
+            val evaluedExpr = TypeChecker.extractBool(eval(e,vars))
+            val evaluedTarget = TypeChecker.extractBool(eval(a,vars))
         in
-            if (evaluedExpr == evaluedTarget) then
+            if evaluedExpr = evaluedTarget then
                 b
-            else 
+            else
                 getCommand (e, xs, vars)
-        end        
+        end
 
 
 
@@ -212,7 +212,7 @@ fun interpret((Print expr),vars,tps) =
         let
             val target = getCommand(e, c1, vars)
         in
-            programa(target, vars, tps)
+            programa(target, vars, tps);
             vars
         end
   | interpret(While(e,c1),vars,tps) =
