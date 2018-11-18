@@ -21,7 +21,6 @@ datatype Expr = Const of tipo
 datatype Tree = Assign of string * Expr
               | Print of Expr
               | If of Expr * (Tree list) * (Tree list)
-              | CaseVal of Expr * (Tree list)
               | Case of Expr
               | While of Expr * (Tree list)
               | Null
@@ -29,26 +28,34 @@ datatype Tree = Assign of string * Expr
 
 type RoseTree = Tree list
 
-val stack = ref [(NULO2, [NULO])]
+val lista = ref [(NULO2, [NULO], 0)]
 
-fun push(x : (Expr * (Tree list))) = 
+val cnt = ref 1;
+val cnt2 = ref 1;
+
+fun insert(x : (Expr), y : (Tree list)) = 
     let 
       
     in
         print("Inserted");
-        stack := x :: (!stack);
+        lista := (x, y, !cnt)::(!lista);
         ()
     end
 
-fun pop() = 
-    let 
+fun inc() = 
+    let
 
     in
-	    case (!stack) of
-	    hd::tl => (stack := tl; hd)
+         cnt := !(cnt) + 1;
+         !cnt
     end
+fun inc2() = 
+    let
 
-
+    in
+         cnt2 := !(cnt2) + 1;
+         !cnt2
+    end
 
 fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
   | getBinaryFun("-", e1, e2) = FuncTwo(Sub, e1, e2)
@@ -188,16 +195,27 @@ fun eval(Const t,vars) = t
         end
 
 
-fun find (e, [], vars) = raise OperationNotSupported
-    | find (e, (a, b:Tree list) :: xs, vars) = 
+fun check (NULO2,NULO2) = true
+    | check (_,_)  = false;
+
+fun find (e, [], vars, i) = raise OperationNotSupported
+    | find (e, (a, b:Tree list, c) :: xs, vars, i) = 
         let
+            val ends = check(a,NULO2)
+            val p = print"SUNSHINE\n";
             val check2 = TypeChecker.extractBool(eval(getExprBoolTree("==", e, a), vars))
+            val check3 = (c = i)
+            
         in
-	    if (check2) then
+            if (ends) then
+                raise OperationNotSupported
+ 	    else
+                if (check2 andalso check3) then
 		    b
 		else 
-		    find (e, xs, vars) 
+		    find (e, xs, vars, i) 
         end 
+
 
 fun interpret((Print expr),vars,tps) =
         let
@@ -230,25 +248,20 @@ fun interpret((Print expr),vars,tps) =
         end
   | interpret(Case(e),vars,tps) =
         let
-            val target = find(e, !stack, vars);
-        in
-            print "Case\n";
-            programa(target , vars, tps);
+            val p = print "Case\n";
+            val call = (!cnt2);
+            val target = find(e, !lista, vars, call);
+            val t = inc2();
+
+        in  
+            programa(target, vars, tps);
             vars
         end
-  | interpret(CaseVal(e, c1), vars, tps) =
-	let
-           val time = 10;
-	in
-           print "CaseVal\n";
-	   push((e,c1));
-	   vars
-	end
+
   | interpret(While(e,c1),vars,tps) =
         let
             val evaluedExpr = TypeChecker.extractBool(eval(e,vars))
         in
-           print "While\n";
             if evaluedExpr then
               let val newVars = programa(c1, vars, tps) in interpret(While(e,c1), newVars, tps) end
             else

@@ -405,21 +405,30 @@ fun conditional_PROD_1_ACT (SR1, SR2, exp_bool, KW_ELSE, KW_THEN, KW_IF, KW_END,
                 ifi
             end
         )
-fun case_element_PROD_1_ACT (SR, TDOT, expr, SR_SPAN : (Lex.pos * Lex.pos), TDOT_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+fun first_case_element_PROD_1_ACT (SR, TDOT, expr, SR_SPAN : (Lex.pos * Lex.pos), TDOT_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   (
             let
-                val ifi2 = (ParseTree.push((expr,SR)))
+                val casee2 = (ParseTree.insert(expr,SR))
             in
-                print "world is funny";
-		()
+                print "first_case_element \n";
+                ()
             end
         )
-fun switch_PROD_1_ACT (OF, expr, KW_CASE, case_element, KW_END, OF_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), case_element_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+fun case_element_PROD_1_ACT (SR, SEMI, TDOT, expr, SR_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), TDOT_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   (
             let
+                val casee = (ParseTree.insert(expr,SR))
+            in
+                print "case_element \n";
+ 		()
+            end
+        )
+fun switch_PROD_1_ACT (OF, SR, expr, first_case_element, KW_CASE, KW_END, OF_SPAN : (Lex.pos * Lex.pos), SR_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), first_case_element_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  (
+            let
+                val casej = (ParseTree.inc())
                 val casei = (ParseTree.Case(expr))
             in
-                print "world is sad";
                 tree := (casei :: (!tree));
                 casei
             end
@@ -2032,15 +2041,27 @@ and switch_NT (strm) = let
       val (KW_CASE_RES, KW_CASE_SPAN, strm') = matchKW_CASE(strm)
       val (expr_RES, expr_SPAN, strm') = expr_NT(strm')
       val (OF_RES, OF_SPAN, strm') = matchOF(strm')
-      val (case_element_RES, case_element_SPAN, strm') = case_element_NT(strm')
+      val (first_case_element_RES, first_case_element_SPAN, strm') = first_case_element_NT(strm')
+      fun switch_PROD_1_SUBRULE_1_NT (strm) = let
+            val (case_element_RES, case_element_SPAN, strm') = case_element_NT(strm)
+            val FULL_SPAN = (#1(case_element_SPAN), #2(case_element_SPAN))
+            in
+              ((case_element_RES), FULL_SPAN, strm')
+            end
+      fun switch_PROD_1_SUBRULE_1_PRED (strm) = (case (lex(strm))
+             of (Tok.SEMI, _, strm') => true
+              | _ => false
+            (* end case *))
+      val (SR_RES, SR_SPAN, strm') = EBNF.closure(switch_PROD_1_SUBRULE_1_PRED, switch_PROD_1_SUBRULE_1_NT, strm')
       val (KW_END_RES, KW_END_SPAN, strm') = matchKW_END(strm')
       val FULL_SPAN = (#1(KW_CASE_SPAN), #2(KW_END_SPAN))
       in
-        (UserCode.switch_PROD_1_ACT (OF_RES, expr_RES, KW_CASE_RES, case_element_RES, KW_END_RES, OF_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), case_element_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+        (UserCode.switch_PROD_1_ACT (OF_RES, SR_RES, expr_RES, first_case_element_RES, KW_CASE_RES, KW_END_RES, OF_SPAN : (Lex.pos * Lex.pos), SR_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), first_case_element_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
           FULL_SPAN, strm')
       end
 and case_element_NT (strm) = let
-      val (expr_RES, expr_SPAN, strm') = expr_NT(strm)
+      val (SEMI_RES, SEMI_SPAN, strm') = matchSEMI(strm)
+      val (expr_RES, expr_SPAN, strm') = expr_NT(strm')
       val (TDOT_RES, TDOT_SPAN, strm') = matchTDOT(strm')
       fun case_element_PROD_1_SUBRULE_1_NT (strm) = let
             val (commands_RES, commands_SPAN, strm') = commands_NT(strm)
@@ -2057,9 +2078,32 @@ and case_element_NT (strm) = let
               | _ => false
             (* end case *))
       val (SR_RES, SR_SPAN, strm') = EBNF.closure(case_element_PROD_1_SUBRULE_1_PRED, case_element_PROD_1_SUBRULE_1_NT, strm')
+      val FULL_SPAN = (#1(SEMI_SPAN), #2(SR_SPAN))
+      in
+        (UserCode.case_element_PROD_1_ACT (SR_RES, SEMI_RES, TDOT_RES, expr_RES, SR_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), TDOT_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+          FULL_SPAN, strm')
+      end
+and first_case_element_NT (strm) = let
+      val (expr_RES, expr_SPAN, strm') = expr_NT(strm)
+      val (TDOT_RES, TDOT_SPAN, strm') = matchTDOT(strm')
+      fun first_case_element_PROD_1_SUBRULE_1_NT (strm) = let
+            val (commands_RES, commands_SPAN, strm') = commands_NT(strm)
+            val FULL_SPAN = (#1(commands_SPAN), #2(commands_SPAN))
+            in
+              ((commands_RES), FULL_SPAN, strm')
+            end
+      fun first_case_element_PROD_1_SUBRULE_1_PRED (strm) = (case (lex(strm))
+             of (Tok.ID(_), _, strm') => true
+              | (Tok.KW_Print, _, strm') => true
+              | (Tok.KW_IF, _, strm') => true
+              | (Tok.KW_WHILE, _, strm') => true
+              | (Tok.KW_CASE, _, strm') => true
+              | _ => false
+            (* end case *))
+      val (SR_RES, SR_SPAN, strm') = EBNF.closure(first_case_element_PROD_1_SUBRULE_1_PRED, first_case_element_PROD_1_SUBRULE_1_NT, strm')
       val FULL_SPAN = (#1(expr_SPAN), #2(SR_SPAN))
       in
-        (UserCode.case_element_PROD_1_ACT (SR_RES, TDOT_RES, expr_RES, SR_SPAN : (Lex.pos * Lex.pos), TDOT_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+        (UserCode.first_case_element_PROD_1_ACT (SR_RES, TDOT_RES, expr_RES, SR_SPAN : (Lex.pos * Lex.pos), TDOT_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
           FULL_SPAN, strm')
       end
 and conditional_NT (strm) = let

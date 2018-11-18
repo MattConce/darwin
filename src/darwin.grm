@@ -72,7 +72,6 @@
 %refcell tree : ParseTree.RoseTree = (nil);
 %refcell vars : tipo AtomMap.map = (AtomMap.empty);
 %refcell ts : string AtomMap.map = (AtomMap.empty);
-
 program
     : KW_title STR SEMI
       KW_variables
@@ -236,25 +235,37 @@ conditional
     ;
 
 
-case_element
+first_case_element
     : expr TDOT (commands)*
         => (
             let
-                val ifi2 = (ParseTree.push((expr,SR)))
+                val casee2 = (ParseTree.insert(expr,SR))
             in
-                print "world is funny";
-		()
+                print "first_case_element \n";
+                ()
+            end
+        )
+    ;
+
+case_element
+    : SEMI expr TDOT (commands)*
+        => (
+            let
+                val casee = (ParseTree.insert(expr,SR))
+            in
+                print "case_element \n";
+ 		()
             end
         )
     ;
 
 switch
-    : KW_CASE expr OF case_element KW_END
+    : KW_CASE expr OF first_case_element (case_element)* KW_END
         => (
             let
+                val casej = (ParseTree.inc())
                 val casei = (ParseTree.Case(expr))
             in
-                print "world is sad";
                 tree := (casei :: (!tree));
                 casei
             end

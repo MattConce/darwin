@@ -5,7 +5,15 @@ variables
 end variables
 commands
     case (10) of
-        (10) : print("O resultado é bom");
+        (10) :  print("entrou no primeiro case");
+         ;(5) : print("O resultado e lindo");
+    end
+
+    case (5) of
+        (10) : print("O resultado é bom 3");
+        ;(5) : print("O resultado e lindo 3");
+        ;(3) : print("O resultado e beautiful 3");
+        ;(1) : print("O resultado e asd 3");
     end
     x:= 10;
 
