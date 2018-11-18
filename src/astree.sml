@@ -22,7 +22,7 @@ datatype Case_element = Element of Expr * (Tree list)
 datatype Tree = Assign of string * Expr
               | Print of Expr
               | If of Expr * (Tree list) * (Tree list)
-              | Case of Expr * (Case_element list)
+              | Case of Expr * (Expr * (Tree list))
               | While of Expr * (Tree list)
               | Null
 
@@ -175,7 +175,7 @@ fun getCommand(e, nil, vars) =
             if evaluedExpr = evaluedTarget then
                 c1
             else
-                getCommand (e, xs, vars)
+                getCommand(e1, xs, vars)
         end
 
 fun interpret((Print expr),vars,tps) =
