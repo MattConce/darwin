@@ -16,9 +16,6 @@ datatype Expr = Const of tipo
               | Rel of OpRel * Expr * Expr
               | Var of string
 
-
-datatype Case_element = Element of Expr * (Tree list)
-
 datatype Tree = Assign of string * Expr
               | Print of Expr
               | If of Expr * (Tree list) * (Tree list)
@@ -167,7 +164,7 @@ fun eval(Const t,vars) = t
 
 fun getCommand(e, nil, vars) =
         raise OperationNotSupported
-  | getCommand (e1, (e2, c1) :: xs, vars) =
+  | getCommand(e1, (e2, c1) :: xs, vars) =
         let
             val evaluedExpr = TypeChecker.extractBool(eval(e1,vars))
             val evaluedTarget = TypeChecker.extractBool(eval(e2,vars))
