@@ -25,7 +25,7 @@
     | TIMES ("*") | DIV("/") | MINUS ("-") | COMMA(",") | SBOOL of (Bool.bool list)
     | LP ("(") | RP (")") | BOOL of bool | AND ("&&") | OR ("||")
     | SPACE (" ") | GT(">") | LT("<") | LEQ("<=") | GEQ(">=") | NEQ("!=")
-    | KW_variables ("variables") | SEMI | TIPO of string | DOTDOT(":=") | TDOT(":")
+    | KW_variables ("variables") | SEMI | TIPO of string | DOTDOT(":=") | COLON(":")
     | KW_commands ("commands") | STR of string | KW_Print ("print")
     | KW_endvars ("end variables") | KW_terminate ("terminate")
     | KW_SUM ("sum") | KW_PROD ("prod") | EMPTY ("{}") | KW_GETS("getString")
@@ -85,7 +85,7 @@ commands
     : prints SEMI  => (prints)
     | assign SEMI  => (assign)
     | conditional  => (conditional)
-    | switch  => (switch)
+    | case_st  => (case_st)
     | loop => (loop)
     ;
 
@@ -235,26 +235,32 @@ conditional
         )
     ;
 
-literal
-    : NUM => (ParseTree.Const (Grammar.Primitivo(Grammar.Int_ NUM)))
-    | REAL => (ParseTree.Const (Grammar.Primitivo(Grammar.Float_ REAL)))
-    | STR => (ParseTree.Const (Grammar.Primitivo(Grammar.String_ STR)))
+case_label
+    : %try exp_arit => (exp_arit)
+    | %try exp_string => (exp_string)
+    ;
+
+case_expr
+    : %try exp_string => (exp_string)
+    | %try exp_arit => (exp_arit)
+    | %try funcs_float => (funcs_float)
+    | %try funcs_int => (funcs_int)
+    | %try funcs_string => (funcs_string)
     ;
 
 
 case_element
-    : literal TDOT (commands)*
+    : case_label COLON (commands)* => (case_label, (commands)*)
     ;
 
-
-switch
-    : KW_CASE expr OF (case_element)* KW_END
+case_st
+    : KW_CASE case_expr OF (case_element)* KW_END
         => (
             let
-                val casei = (ParseTree.Case(expr, (case_element)*))
+                val c = (ParseTree.Case(case_expr, (case_element)*))
             in
-                tree := (casei :: (!tree));
-                casei
+                tree := (c :: (!tree));
+                c
             end
         )
     ;

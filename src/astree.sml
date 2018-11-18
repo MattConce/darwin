@@ -165,19 +165,18 @@ fun eval(Const t,vars) = t
               | (_, _) => raise TypeChecker.TypeMismatch
         end
 
-fun getCommand (e, nil, vars) = raise OperationNotSupported
-    | getCommand (e, (a, b) :: xs, vars) =
+fun getCommand(e, nil, vars) =
+        raise OperationNotSupported
+  | getCommand (e1, (e2, c1) :: xs, vars) =
         let
-            val evaluedExpr = TypeChecker.extractBool(eval(e,vars))
-            val evaluedTarget = TypeChecker.extractBool(eval(a,vars))
+            val evaluedExpr = TypeChecker.extractBool(eval(e1,vars))
+            val evaluedTarget = TypeChecker.extractBool(eval(e2,vars))
         in
             if evaluedExpr = evaluedTarget then
-                b
+                c1
             else
                 getCommand (e, xs, vars)
         end
-
-
 
 fun interpret((Print expr),vars,tps) =
         let
@@ -208,9 +207,9 @@ fun interpret((Print expr),vars,tps) =
                 programa(c2, vars, tps);
             vars
         end
-  | interpret(Case(e,c1),vars,tps) =
+  | interpret(Case(e,caseEle),vars,tps) =
         let
-            val target = getCommand(e, c1, vars)
+            val target = getCommand(e, caseEle, vars)
         in
             programa(target, vars, tps);
             vars

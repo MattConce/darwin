@@ -11351,7 +11351,7 @@ fun yyAction57 (strm, lastMatch : yymatch) = (yystrm := strm;   T.NEQ )
 fun yyAction58 (strm, lastMatch : yymatch) = (yystrm := strm;   T.EMPTY )
 fun yyAction59 (strm, lastMatch : yymatch) = (yystrm := strm;   T.COMMA )
 fun yyAction60 (strm, lastMatch : yymatch) = (yystrm := strm;   T.DOTDOT )
-fun yyAction61 (strm, lastMatch : yymatch) = (yystrm := strm;   T.TDOT )
+fun yyAction61 (strm, lastMatch : yymatch) = (yystrm := strm;   T.COLON )
 fun yyAction62 (strm, lastMatch : yymatch) = (yystrm := strm;   continue() )
 fun yyAction63 (strm, lastMatch : yymatch) = (yystrm := strm;
         T.KW_terminate )
