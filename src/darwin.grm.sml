@@ -410,7 +410,7 @@ fun first_case_element_PROD_1_ACT (SR, TDOT, expr, SR_SPAN : (Lex.pos * Lex.pos)
             let
                 val casee2 = (ParseTree.insert(expr,SR))
             in
-                print "first_case_element \n";
+                
                 ()
             end
         )
@@ -419,7 +419,7 @@ fun case_element_PROD_1_ACT (SR, SEMI, TDOT, expr, SR_SPAN : (Lex.pos * Lex.pos)
             let
                 val casee = (ParseTree.insert(expr,SR))
             in
-                print "case_element \n";
+                
  		()
             end
         )
@@ -427,7 +427,7 @@ fun switch_PROD_1_ACT (OF, SR, expr, first_case_element, KW_CASE, KW_END, OF_SPA
   (
             let
                 val casej = (ParseTree.inc())
-                val casei = (ParseTree.Case(expr))
+                val casei = (ParseTree.Case(expr,casej))
             in
                 tree := (casei :: (!tree));
                 casei

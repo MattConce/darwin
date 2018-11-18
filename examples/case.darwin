@@ -6,14 +6,22 @@ end variables
 commands
     case (10) of
         (10) :  print("entrou no primeiro case");
-         ;(5) : print("O resultado e lindo");
+              case (10) of
+              (10) : print("entrou no segundo case");
+                     case (10) of
+              	     (10) : print("entrou no terceiro case");
+                     ;(5) : print("errou"); 
+                     end                  
+              ;(5) : print("errou");
+	      end
+         ;(5) : print("errou");
     end
 
     case (5) of
-        (10) : print("O resultado é bom 3");
-        ;(5) : print("O resultado e lindo 3");
-        ;(3) : print("O resultado e beautiful 3");
-        ;(1) : print("O resultado e asd 3");
+        (10) : print("errou");
+        ;(5) : print("entrou no case certo");
+        ;(3) : print("errrou");
+        ;(1) : print("errou");
     end
     x:= 10;
 

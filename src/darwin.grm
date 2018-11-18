@@ -241,7 +241,7 @@ first_case_element
             let
                 val casee2 = (ParseTree.insert(expr,SR))
             in
-                print "first_case_element \n";
+                (*print "first_case_element \n";*)
                 ()
             end
         )
@@ -253,7 +253,7 @@ case_element
             let
                 val casee = (ParseTree.insert(expr,SR))
             in
-                print "case_element \n";
+                (*print "case_element \n";*)
  		()
             end
         )
@@ -264,7 +264,7 @@ switch
         => (
             let
                 val casej = (ParseTree.inc())
-                val casei = (ParseTree.Case(expr))
+                val casei = (ParseTree.Case(expr,casej))
             in
                 tree := (casei :: (!tree));
                 casei

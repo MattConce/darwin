@@ -21,7 +21,7 @@ datatype Expr = Const of tipo
 datatype Tree = Assign of string * Expr
               | Print of Expr
               | If of Expr * (Tree list) * (Tree list)
-              | Case of Expr
+              | Case of Expr * int
               | While of Expr * (Tree list)
               | Null
               | NULO
@@ -31,13 +31,12 @@ type RoseTree = Tree list
 val lista = ref [(NULO2, [NULO], 0)]
 
 val cnt = ref 1;
-val cnt2 = ref 1;
 
 fun insert(x : (Expr), y : (Tree list)) = 
     let 
       
     in
-        print("Inserted");
+        (*print("Inserted");*)
         lista := (x, y, !cnt)::(!lista);
         ()
     end
@@ -47,16 +46,8 @@ fun inc() =
 
     in
          cnt := !(cnt) + 1;
-         !cnt
+         (!cnt)-1
     end
-fun inc2() = 
-    let
-
-    in
-         cnt2 := !(cnt2) + 1;
-         !cnt2
-    end
-
 fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
   | getBinaryFun("-", e1, e2) = FuncTwo(Sub, e1, e2)
   | getBinaryFun("/", e1, e2) = FuncTwo(Div, e1, e2)
@@ -202,7 +193,7 @@ fun find (e, [], vars, i) = raise OperationNotSupported
     | find (e, (a, b:Tree list, c) :: xs, vars, i) = 
         let
             val ends = check(a,NULO2)
-            val p = print"SUNSHINE\n";
+            (*val p = print"SUNSHINE\n";*)
             val check2 = TypeChecker.extractBool(eval(getExprBoolTree("==", e, a), vars))
             val check3 = (c = i)
             
@@ -246,12 +237,10 @@ fun interpret((Print expr),vars,tps) =
                 programa(c2, vars, tps);
             vars
         end
-  | interpret(Case(e),vars,tps) =
+  | interpret(Case(e, i),vars,tps) =
         let
-            val p = print "Case\n";
-            val call = (!cnt2);
+            val call = i;
             val target = find(e, !lista, vars, call);
-            val t = inc2();
 
         in  
             programa(target, vars, tps);
