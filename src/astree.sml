@@ -19,7 +19,7 @@ datatype Expr = Const of tipo
 datatype Tree = Assign of string * Expr
               | Print of Expr
               | If of Expr * (Tree list) * (Tree list)
-              | Case of Expr * (Expr * (Tree list))
+              | Case of Expr * (Expr * (Tree list)) list
               | While of Expr * (Tree list)
               | Null
 

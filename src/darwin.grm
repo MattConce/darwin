@@ -250,7 +250,7 @@ case_expr
 
 
 case_element
-    : case_label COLON (commands)* => (case_label, (commands)*)
+    : case_label COLON (commands)* => (case_label, SR)
     ;
 
 case_st
