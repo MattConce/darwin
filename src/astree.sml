@@ -162,17 +162,12 @@ fun eval(Const t,vars) = t
               | (_, _) => raise TypeChecker.TypeMismatch
         end
 
-fun getCommand(e, nil, vars) =
-        raise OperationNotSupported
+fun getCommand(e, nil, vars) = []
   | getCommand(e1, (e2, c1) :: xs, vars) =
         let
-            val p1 = print("debug case 1");
-            val evaluedExpr = TypeChecker.extractBool(eval(e1,vars))
-            val p2 = print("debug case 2");
-            val evaluedTarget = TypeChecker.extractBool(eval(e2,vars))
-            val p3 = print("debug case 3");
+            val evaluedExpr = TypeChecker.extractBool(eval(Rel(EQR,e1,e2),vars))
         in
-            if evaluedExpr = evaluedTarget then
+            if evaluedExpr then
                 c1
             else
                 getCommand(e1, xs, vars)

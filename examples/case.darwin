@@ -2,13 +2,97 @@ title "Testes do comando case";
 variables
     int x;
     int y;
+    int z;
+    float f;
+    int count_one;
+    int count_two;
+    int count_three;
+    int count_four;
+    int count_five;
 end variables
 commands
     print("Teste int literal com literal");
     case (5) of
         (10) : print("O resultado está errado");
         (5) : print("O resultado está certo");
-        (3) : print("O restulado está errado");
+        (3) : print("O resultado está errado");
         (1) : print("O resultado está errado");
+    end
+    print("");
+
+    print("Teste nested cases");
+    case (10) of
+        (10) :  print("Entrou no primeiro case");
+            case (10) of
+            (10) : print("Entrou no segundo case");
+                case (10) of
+              	(10) : print("Entrou no terceiro case e o resultado está certo");
+                (5) : print("O resultado está errado"); 
+                end                  
+            (5) : print("O resultado está errado");
+	      end
+        (5) : print("O resultado está errado");
+    end
+    print("");
+
+    print("Teste expr literal");
+    x := 3;
+    case (x) of
+        (1) : print("O resultado está errado");
+        (2) : print("O resultado está errado");
+        (3) : print("O resultado está certo");
+    end
+    print("");
+
+    print("Teste de ordem de avaliacao");
+    case (1) of
+        (1) : print("Primeira correspondência");
+        (1) : print("Correspondência intermediária");
+        (1) : print("Última correspondência");
+    end
+    print("");
+
+    print("Teste expr expr");
+    y := 5;
+    case (x + 1) of
+        (y + 1) : print("O resultado está errado");
+        (y - 1) : print("O resultado está certo");
+        (y) : print("O resultado está errado");
+    end
+    print("");
+
+    print("Teste sem match para a expressão");
+    case (x) of
+        (1) : print("O resultado está errado");
+        (2) : print("O resultado está errado");
+        (4) : print("O resultado está errado");
+    end
+    print("Processou normalmente");
+    print("");
+
+    print("Teste de escopo");
+    z := 3;
+    count_one := 0;
+    count_two := 0;
+    while (z > 0) do
+        case (z) of
+            (1) : count_one := (count_one + 1);
+                  print("Case One: " ++ toString(count_one));
+            (2) : count_two := (count_two + 1);
+                  print("Case Two: " ++ toString(count_two));
+        end
+        print("While One: " ++ toString(count_one));
+        print("While Two: " ++ toString(count_two));
+        z := (z - 1);
+    end
+    print("Final One: " ++ toString(count_one));
+    print("Final Two: " ++ toString(count_two));
+    print("");
+
+    print("Teste com tipos diferentes: erro esperado");
+    f := 1.5;
+    case (1) of
+        (f) : print("Inferiu int para float");
+        (2) : print("O resultado está errado");
     end
     print("");
