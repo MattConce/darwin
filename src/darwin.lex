@@ -54,6 +54,7 @@
 "else" => ( T.KW_ELSE );
 "while" => ( T.KW_WHILE );
 "case" => ( T.KW_CASE );
+"of" => ( T.KW_OF );
 "do" => ( T.KW_DO );
 "end" => ( T.KW_END );
 {tipo} => ( T.TIPO yytext );

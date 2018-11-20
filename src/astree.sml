@@ -19,7 +19,7 @@ datatype Expr = Const of tipo
 datatype Tree = Assign of string * Expr
               | Print of Expr
               | If of Expr * (Tree list) * (Tree list)
-              | Case of Expr * Expr list
+              | Case of Expr * (Expr * (Tree list)) list
               | While of Expr * (Tree list)
               | Null
 
@@ -164,16 +164,16 @@ fun eval(Const t,vars) = t
 
 fun getCommand(e, nil, vars) =
         raise OperationNotSupported
-  | getCommand(e1, e2 :: xs, vars) =
+  | getCommand(e1, (e2, c1) :: xs, vars) =
         let
+            val p1 = print("debug case 1");
             val evaluedExpr = TypeChecker.extractBool(eval(e1,vars))
+            val p2 = print("debug case 2");
             val evaluedTarget = TypeChecker.extractBool(eval(e2,vars))
+            val p3 = print("debug case 3");
         in
             if evaluedExpr = evaluedTarget then
-                let
-                    val p = print"bananas";
-                in ()
-                end
+                c1
             else
                 getCommand(e1, xs, vars)
         end
@@ -211,7 +211,7 @@ fun interpret((Print expr),vars,tps) =
         let
             val target = getCommand(e, caseEle, vars)
         in
-            (*programa(target, vars, tps);*)
+            programa(target, vars, tps);
             vars
         end
   | interpret(While(e,c1),vars,tps) =

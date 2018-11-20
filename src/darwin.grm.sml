@@ -47,7 +47,7 @@ structure DarwinTokens =
       | KW_ELSE
       | KW_WHILE
       | KW_CASE
-      | OF
+      | KW_OF
       | KW_DO
       | KW_END
       | KW_TOSTRING
@@ -70,7 +70,7 @@ structure DarwinTokens =
       | CONCAT
       | EOF
     val allToks = [
-            KW_let, KW_in, KW_title, PLUS, EEQ, TIMES, DIV, MINUS, COMMA, LP, RP, AND, OR, SPACE, GT, LT, LEQ, GEQ, NEQ, KW_variables, SEMI, DOTDOT, COLON, KW_commands, KW_Print, KW_endvars, KW_terminate, KW_SUM, KW_PROD, EMPTY, KW_GETS, KW_IF, KW_THEN, KW_ELSE, KW_WHILE, KW_CASE, OF, KW_DO, KW_END, KW_TOSTRING, KW_MEAN, KW_CORR, KW_MEDIAN, KW_STDEV, KW_VAR, KW_RT, KW_POW, KW_GETF, KW_COV, KW_LINREG, VOID, KW_GETI, KW_TOFLOAT, KW_TOINT, CONCAT, EOF
+            KW_let, KW_in, KW_title, PLUS, EEQ, TIMES, DIV, MINUS, COMMA, LP, RP, AND, OR, SPACE, GT, LT, LEQ, GEQ, NEQ, KW_variables, SEMI, DOTDOT, COLON, KW_commands, KW_Print, KW_endvars, KW_terminate, KW_SUM, KW_PROD, EMPTY, KW_GETS, KW_IF, KW_THEN, KW_ELSE, KW_WHILE, KW_CASE, KW_OF, KW_DO, KW_END, KW_TOSTRING, KW_MEAN, KW_CORR, KW_MEDIAN, KW_STDEV, KW_VAR, KW_RT, KW_POW, KW_GETF, KW_COV, KW_LINREG, VOID, KW_GETI, KW_TOFLOAT, KW_TOINT, CONCAT, EOF
            ]
     fun toString tok =
 (case (tok)
@@ -120,7 +120,7 @@ structure DarwinTokens =
   | (KW_ELSE) => "else"
   | (KW_WHILE) => "while"
   | (KW_CASE) => "case"
-  | (OF) => "of"
+  | (KW_OF) => "of"
   | (KW_DO) => "do"
   | (KW_END) => "end"
   | (KW_TOSTRING) => "toString"
@@ -191,7 +191,7 @@ structure DarwinTokens =
   | (KW_ELSE) => true
   | (KW_WHILE) => true
   | (KW_CASE) => true
-  | (OF) => false
+  | (KW_OF) => true
   | (KW_DO) => true
   | (KW_END) => true
   | (KW_TOSTRING) => true
@@ -418,8 +418,8 @@ fun case_expr_PROD_4_ACT (funcs_int, funcs_int_SPAN : (Lex.pos * Lex.pos), FULL_
 fun case_expr_PROD_5_ACT (funcs_string, funcs_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   (funcs_string)
 fun case_element_PROD_1_ACT (SR, COLON, case_label, SR_SPAN : (Lex.pos * Lex.pos), COLON_SPAN : (Lex.pos * Lex.pos), case_label_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  (case_label)
-fun case_st_PROD_1_ACT (OF, SR, KW_CASE, case_expr, KW_END, OF_SPAN : (Lex.pos * Lex.pos), SR_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), case_expr_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  (case_label, SR)
+fun case_st_PROD_1_ACT (SR, KW_CASE, KW_OF, case_expr, KW_END, SR_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), KW_OF_SPAN : (Lex.pos * Lex.pos), case_expr_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   (
             let
                 val casei = (ParseTree.Case(case_expr, SR))
@@ -715,8 +715,8 @@ fun matchKW_CASE strm = (case (lex(strm))
  of (Tok.KW_CASE, span, strm') => ((), span, strm')
   | _ => fail()
 (* end case *))
-fun matchOF strm = (case (lex(strm))
- of (Tok.OF, span, strm') => ((), span, strm')
+fun matchKW_OF strm = (case (lex(strm))
+ of (Tok.KW_OF, span, strm') => ((), span, strm')
   | _ => fail()
 (* end case *))
 fun matchKW_DO strm = (case (lex(strm))
@@ -2164,7 +2164,7 @@ and loop_NT (strm) = let
 and case_st_NT (strm) = let
       val (KW_CASE_RES, KW_CASE_SPAN, strm') = matchKW_CASE(strm)
       val (case_expr_RES, case_expr_SPAN, strm') = case_expr_NT(strm')
-      val (OF_RES, OF_SPAN, strm') = matchOF(strm')
+      val (KW_OF_RES, KW_OF_SPAN, strm') = matchKW_OF(strm')
       fun case_st_PROD_1_SUBRULE_1_NT (strm) = let
             val (case_element_RES, case_element_SPAN, strm') = case_element_NT(strm)
             val FULL_SPAN = (#1(case_element_SPAN), #2(case_element_SPAN))
@@ -2202,7 +2202,7 @@ and case_st_NT (strm) = let
       val (KW_END_RES, KW_END_SPAN, strm') = matchKW_END(strm')
       val FULL_SPAN = (#1(KW_CASE_SPAN), #2(KW_END_SPAN))
       in
-        (UserCode.case_st_PROD_1_ACT (OF_RES, SR_RES, KW_CASE_RES, case_expr_RES, KW_END_RES, OF_SPAN : (Lex.pos * Lex.pos), SR_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), case_expr_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+        (UserCode.case_st_PROD_1_ACT (SR_RES, KW_CASE_RES, KW_OF_RES, case_expr_RES, KW_END_RES, SR_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), KW_OF_SPAN : (Lex.pos * Lex.pos), case_expr_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
           FULL_SPAN, strm')
       end
 and case_element_NT (strm) = let

@@ -29,7 +29,7 @@
     | KW_commands ("commands") | STR of string | KW_Print ("print")
     | KW_endvars ("end variables") | KW_terminate ("terminate")
     | KW_SUM ("sum") | KW_PROD ("prod") | EMPTY ("{}") | KW_GETS("getString")
-    | KW_IF("if") | KW_THEN("then") | KW_ELSE("else") | KW_WHILE("while") | KW_CASE("case") | OF("of")
+    | KW_IF("if") | KW_THEN("then") | KW_ELSE("else") | KW_WHILE("while") | KW_CASE("case") | KW_OF("of")
     | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString") | KW_MEAN("mean")
     | KW_CORR("correlation") | KW_MEDIAN("median") | KW_STDEV("stdDeviation")
     | KW_VAR("variance") | KW_RT("rt") | KW_POW("pow") | KW_GETF("getFloat") | KW_COV("covariance")
@@ -48,6 +48,7 @@
     KW_ELSE,
     KW_WHILE,
     KW_CASE,
+    KW_OF,
     KW_DO,
     KW_END,
     KW_PROD,
@@ -250,11 +251,11 @@ case_expr
 
 
 case_element
-    : case_label COLON (commands)* => (case_label)
+    : case_label COLON (commands)* => (case_label, SR)
     ;
 
 case_st
-    : KW_CASE case_expr OF (case_element)* KW_END
+    : KW_CASE case_expr KW_OF (case_element)* KW_END
         => (
             let
                 val casei = (ParseTree.Case(case_expr, SR))
