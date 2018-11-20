@@ -4,11 +4,11 @@ variables
     int y;
 end variables
 commands
-    case(10) then
-        10 : print("O resultado é bom");
+    print("Teste int literal com literal");
+    case (5) of
+        (10) : print("O resultado está errado");
+        (5) : print("O resultado está certo");
+        (3) : print("O restulado está errado");
+        (1) : print("O resultado está errado");
     end
-    x := 4;
-    case(x) then
-        5 : print("O resultado é bom bom");
-    end
-
+    print("");

@@ -418,14 +418,14 @@ fun case_expr_PROD_4_ACT (funcs_int, funcs_int_SPAN : (Lex.pos * Lex.pos), FULL_
 fun case_expr_PROD_5_ACT (funcs_string, funcs_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   (funcs_string)
 fun case_element_PROD_1_ACT (SR, COLON, case_label, SR_SPAN : (Lex.pos * Lex.pos), COLON_SPAN : (Lex.pos * Lex.pos), case_label_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  (case_label, SR)
+  (case_label)
 fun case_st_PROD_1_ACT (OF, SR, KW_CASE, case_expr, KW_END, OF_SPAN : (Lex.pos * Lex.pos), SR_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), case_expr_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   (
             let
-                val c = (ParseTree.Case(case_expr, SR))
+                val casei = (ParseTree.Case(case_expr, SR))
             in
-                tree := (c :: (!tree));
-                c
+                tree := (casei :: (!tree));
+                casei
             end
         )
 fun exp_arit_PROD_1_ACT (addExp, addExp_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 

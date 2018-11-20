@@ -250,17 +250,17 @@ case_expr
 
 
 case_element
-    : case_label COLON (commands)* => (case_label, SR)
+    : case_label COLON (commands)* => (case_label)
     ;
 
 case_st
     : KW_CASE case_expr OF (case_element)* KW_END
         => (
             let
-                val c = (ParseTree.Case(case_expr, SR))
+                val casei = (ParseTree.Case(case_expr, SR))
             in
-                tree := (c :: (!tree));
-                c
+                tree := (casei :: (!tree));
+                casei
             end
         )
     ;
