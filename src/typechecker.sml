@@ -89,6 +89,7 @@ fun oper("+", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Int_ (i+j))
    | oper("&&", Primitivo(Boolean_ i),Primitivo(Boolean_ j)) = Primitivo(Boolean_ (i andalso j))
    | oper("||", Primitivo(Boolean_ i),Primitivo(Boolean_ j)) = Primitivo(Boolean_ (i orelse j))
    | oper("++",Primitivo(String_ l),Primitivo(String_ m)) = Primitivo(String_ ("\""^ String.implode((List.filter (fn(x) => not(x = #"\"")) (String.explode(l ^ m)))) ^ "\""))
+   | oper("==",Primitivo(String_ i),Primitivo(String_ j)) = if (String.compare(i, j) = EQUAL) then Primitivo (Boolean_ true) else Primitivo (Boolean_ false)
    | oper(_,_,_) = raise FunctionTwoNotImplemented
 
 fun exprTypes e1 e2 = (typeof e1) = (typeof e2)

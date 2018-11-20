@@ -9,8 +9,19 @@ variables
     int count_three;
     int count_four;
     int count_five;
+    string s1;
 end variables
 commands
+
+    print ("Teste com string");
+    s1 := "Vermelho";
+    case (s1) of
+	"Vermelho" : print("Vermelho");
+        "Verde" : print("Verde");
+        "Azul" : print("Azul");
+    end
+
+
     print("Teste int literal com literal");
     case (5) of
         (10) : print("O resultado está errado");
@@ -88,6 +99,7 @@ commands
     print("Final One: " ++ toString(count_one));
     print("Final Two: " ++ toString(count_two));
     print("");
+    
 
     print("Teste com tipos diferentes: erro esperado");
     f := 1.5;

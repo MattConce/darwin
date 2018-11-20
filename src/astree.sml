@@ -126,6 +126,8 @@ fun eval(Const t,vars) = t
             case (TypeChecker.typeof ee1,TypeChecker.typeof ee2) of
                   ("int","int") => TypeChecker.oper(showOpRel oprel,ee1,ee2)
                 | ("float","float") => TypeChecker.oper(showOpRel oprel,ee1,ee2)
+                | ("boolean","boolean") => TypeChecker.oper(showOpRel oprel,ee1,ee2)
+                | ("string","string") => TypeChecker.oper(showOpRel oprel,ee1,ee2)
                 | (_,_) => raise TypeChecker.TypeMismatch
         end
   | eval(FuncOne(func, e1), vars) =
