@@ -257,7 +257,7 @@ case_st
     : KW_CASE case_expr OF (case_element)* KW_END
         => (
             let
-                val c = (ParseTree.Case(case_expr, (case_element)*))
+                val c = (ParseTree.Case(case_expr, SR))
             in
                 tree := (c :: (!tree));
                 c

@@ -422,7 +422,7 @@ fun case_element_PROD_1_ACT (SR, COLON, case_label, SR_SPAN : (Lex.pos * Lex.pos
 fun case_st_PROD_1_ACT (OF, SR, KW_CASE, case_expr, KW_END, OF_SPAN : (Lex.pos * Lex.pos), SR_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), case_expr_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   (
             let
-                val c = (ParseTree.Case(case_expr, (case_element)*))
+                val c = (ParseTree.Case(case_expr, SR))
             in
                 tree := (c :: (!tree));
                 c
