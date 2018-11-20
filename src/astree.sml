@@ -167,9 +167,10 @@ fun eval(Const t,vars) = t
 fun getCommand(e, nil, vars) = []
   | getCommand(e1, (e2, c1) :: xs, vars) =
         let
-            val evaluedExpr = TypeChecker.extractBool(eval(Rel(EQR,e1,e2),vars))
+            val result = eval(Rel(EQR, e1, e2), vars)
+            val evalExpr = TypeChecker.extractBool(result)
         in
-            if evaluedExpr then
+            if evalExpr then
                 c1
             else
                 getCommand(e1, xs, vars)
